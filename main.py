@@ -1,4 +1,4 @@
-import GenericAlgorithm
+import GeneticAlgorithm
 import LSTM
 import SVM
 import MarkowitzEF
