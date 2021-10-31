@@ -7,7 +7,7 @@ from pylab import mpl
 import scipy.optimize as sco
 plt.rcParams['font.family'] = 'Arial Unicode MS'
 plt.rcParams['axes.unicode_minus']=False
-
+import params
 
 def getAnnualReturn(_ret_df):
     # columns is the stock code: 10 columns
@@ -19,8 +19,8 @@ def getCovMatrix(_ret_df):
 
 
 def portSimulation(_ret_annual, _cov_matrix, _stock_amt = 10, _port_count = 50000):
-    assert _ret_annual.shape[1] == _stock_amt, "return dataframe shape error"
-    assert _cov_matrix.shape[1] == _stock_amt, "covariance matrix shape error"
+    # assert _ret_annual.shape[1] == _stock_amt, "return dataframe shape error"
+    # assert _cov_matrix.shape[1] == _stock_amt, "covariance matrix shape error"
     port_rets = []
     port_vols = []
     port_wght = []
