@@ -48,8 +48,11 @@ class GAList(object):
 		self.population = []
 		unit_amount = self.unit_amount
 		while unit_amount>0:
-			gene = [x for x in range(self.gene_length)]
+			zero_amt = self.gene_length//2
+			one_amt = self.gene_length - zero_amt
+			gene = ['0'] * zero_amt + ['1'] * one_amt
 			random.shuffle(gene)  			# 随机洗牌 #
+			gene = ''.join(gene)
 			unit = GAUnit(gene)
 			self.population.append(unit)
 			unit_amount -= 1
@@ -66,8 +69,8 @@ class GAList(object):
 		self.best = self.population[0]
 		for unit in self.population:
 			unit.value = self.MatchFun(unit)
-			self.bounds += unit.value
-			if self.best.value < unit.value:	# score为距离的倒数 所以越小越好 #
+			self.bounds += abs(unit.value)
+			if self.best.value < unit.value:	# sharpe ratio 越大越好 #
 				self.best = unit
 
 	def cross(self, parent1, parent2):
@@ -83,16 +86,7 @@ class GAList(object):
 		"""
 		index1 = random.randint(0, self.gene_length - 1)  		# 随机生成突变起始位置 #
 		index2 = random.randint(index1, self.gene_length - 1)  	# 随机生成突变终止位置 #
-		temp_gene = parent2.gene[index1:index2]  				# 交叉的基因片段
-		new_gene = []
-		p1len = 0
-		for g in parent1.gene:
-			if p1len == index1:
-				new_gene.extend(temp_gene)  		# 插入基因片段
-				p1len += 1
-			if g not in temp_gene:
-				new_gene.append(g)
-				p1len += 1
+		new_gene = parent1.gene[0:index1] + parent2.gene[index1:index2] + parent1.gene[index2:]
 		self.cross_count += 1
 		return new_gene
 
@@ -108,10 +102,10 @@ class GAList(object):
 		index1 = random.randint(0, self.gene_length - 1)
 		index2 = random.randint(0, self.gene_length - 1)
 		# 随机选择两个位置的基因交换--变异
-		new_gene = gene[:]  					# 产生一个新的基因序列，以免变异的时候影响父种群
+		new_gene = list(gene[:])  					# 产生一个新的基因序列，以免变异的时候影响父种群
 		new_gene[index1], new_gene[index2] = new_gene[index2], new_gene[index1]
 		self.mutation_count += 1
-		return new_gene
+		return ''.join(new_gene)
 
 	def getOneUnit(self):
 		"""
@@ -123,7 +117,7 @@ class GAList(object):
 		"""
 		r = random.uniform(0, self.bounds)
 		for unit in self.population:
-			r -= unit.value
+			r -= abs(unit.value)
 			if r <= 0:
 				return unit
 
