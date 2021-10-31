@@ -1,0 +1,48 @@
+
+
+Introduction
+    LSTM                                            1
+    SVM + Markowitz efficient frontier              2
+    Genetic Algorithm                               3
+
+Model
+    Data                                            4
+    Model Steps                                     5
+    Result
+        SVM + Markowitz efficient frontier          6
+        Genetic Algorithm                           7
+
+Analysis
+    Conclusion                                      8
+    Analysis                                        9
+
+
+
+
+3>
+
+Selection of the optimal parameters is challenging for machine learning, so our project try to use genetic algorithm to select stocks and allocate weights.
+
+
+We use a binary string as the unit gene:
+    5-bit binary string to represent the weight of one stock;
+    100 stocks, so the gene length is 500 for an unit, which represents the weights of the 100 stocks.
+
+Run genetic algorithm shown on the left to get the best unit:
+    Best unit has the weights for the 100 stocks;
+    Select 10 out of 100 stocks with biggest weights to construct the portfolio;
+    Filter out those with negative expected return stocks from the 10 stocks to construct the final portfolio;
+    The final portfolio in this case may have less than 10 stocks.
+
+5>
+
+LSTM + Genetic Algorithm
+    Use LSTM model to predict the close price of NASDAQ100 underlying stocks in October;
+    Pass the predicted price and return into genetic algorithm to get the component stocks and then calculate the weight of each stock;
+    Use the real price and return of October to evaluate the performance of the above portfolio.
+
+SVM + Markowitz efficient frontier
+    Use historical known price and other fundamental information to predict the probability of going up for each stock;
+    Choose 10 stocks with highest probability and then pass these 10 stocks into efficient frontier algorithm;
+    Use historical known price and return of these 10 stocks as well as the efficient frontier model to get the weight of each stock;
+    Use the real price and return of October to evaluate the performance of the above portfolio.
