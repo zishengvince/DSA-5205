@@ -99,11 +99,12 @@ class GAList(object):
 				输出	1	newGene： 通过交叉后的一个新的遗传个体的基因序列
 			其他说明：无
 		"""
-		index1 = random.randint(0, self.gene_length - 1)
-		index2 = random.randint(0, self.gene_length - 1)
-		# 随机选择两个位置的基因交换--变异
 		new_gene = list(gene[:])  					# 产生一个新的基因序列，以免变异的时候影响父种群
-		new_gene[index1], new_gene[index2] = new_gene[index2], new_gene[index1]
+		for i in range(5):
+			index1 = random.randint(0, self.gene_length - 1)
+			index2 = random.randint(0, self.gene_length - 1)
+			# 随机选择两个位置的基因交换--变异
+			new_gene[index1], new_gene[index2] = new_gene[index2], new_gene[index1]
 		self.mutation_count += 1
 		return ''.join(new_gene)
 

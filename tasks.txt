@@ -46,3 +46,53 @@ SVM + Markowitz efficient frontier
     Choose 10 stocks with highest probability and then pass these 10 stocks into efficient frontier algorithm;
     Use historical known price and return of these 10 stocks as well as the efficient frontier model to get the weight of each stock;
     Use the real price and return of October to evaluate the performance of the above portfolio.
+
+
+Introduction>
+
+We used 2 independent methods to construct 2 different portfolios and compare the performance of these 2 portfolios.
+    Algorithm based: LSTM + Genetic Algorithm;
+    Relatively theory based: SVM + Markowitz efficient frontier;
+
+
+
+Objective>
+
+Create a portfolio of up to 10 stocks from NASDAQ100 underlying stocks by maximizing the sharpe ratio of the portfolio.
+
+
+GA>
+
+A genetic algorithm is a search heuristic that is inspired by Charles Darwin’s theory of natural evolution. Genetic algorithms are commonly used to generate high-quality solutions to optimization and search problems by relying on biologically inspired operators such as mutation, crossover and selection.
+
+The process of natural selection starts with the selection of fittest individuals from a population. They produce offspring which inherit the characteristics of the parents and will be added to the next generation. If parents have better fitness, their offspring will be better than parents and have a better chance at surviving. This process keeps on iterating and at the end, a generation with the fittest individuals will be found.
+
+
+Advantages:
+    GA search from a population of points, rather than a single point
+    GA is good for "noisy" envrionments
+    GA is robust with respect to local minima/maxima
+Disadvantages:
+    GA implementation is still an art
+    GA requeries less information about the problem, but designing an objective function and getting the representation and operators right can be difficult.
+    GA is computationally expensive i.e. time-consuming
+
+
+LSTM+GA>
+
+procedure:
+    use 2021M10_Prediction to run the genetic algorithm;
+    genetic algorithm will return a portforlio for 2021M10_Prediction data which maximizes the sharpe ratio;
+    use the 2021M10_Real to evaluate the portfolio performance.
+
+Algorithm details:
+
+Gene design:
+    use a binary string as the individual gene;
+    I assigned 7-bit binary string to each underlying stock to represent its weight, so each individual has a 700-bit binary string as its gene;
+
+Selection:
+    decode gene for each individual: we have 100 stocks, each having 7-bit. Selected 10 stocks with highest weights to evaluate the individual;
+
+
+

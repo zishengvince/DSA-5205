@@ -7,7 +7,11 @@ import data
 
 def decodeGene(_sub_gene):
     assert isinstance(_sub_gene, str), "_gene should be a string"
-    return float(int(_sub_gene,2))
+    # sign = 1 if _sub_gene[0] == '0' else -1
+    # amt = _sub_gene[1:]
+    sign = 1
+    amt = _sub_gene
+    return float(int(amt,2))*sign
 
 
 def cutText(_text):
@@ -17,6 +21,7 @@ def cutText(_text):
 
 
 def getMaxNIndex(_arr, n = 10):
+    # _arr = list(abs(_arr))
     _arr = list(_arr)
     max_index_list = []
     Inf = 0
@@ -35,7 +40,8 @@ def calculatePE(_weight_arr):
     stock_arr = data.STOCK_ARR[max_index_list]
     stock_list = list(stock_arr)
 
-    ret_df = data.RET_DF[stock_list]
+    # ret_df = data.RET_PREDICT[stock_list]
+    ret_df = data.RET_TRUE_SEP[stock_list]
     annual_ret = ret_df.mean()*252
     cov_ret = ret_df.cov()*252
     returns = np.dot(_weight_arr, annual_ret)
@@ -62,8 +68,31 @@ def gaStockSelection(_cross_rate = params.cross_rate,
 
     count = 0
     while count < _generation:
-        print("Generation #" + str(count+1))
+        data.logger.info("Generation #" + str(count+1))
         ga_population.nextGeneration()
         count += 1
+        stock_arr, weight_arr = decodeBest(ga_population.best)
+        evaluate(list(stock_arr),weight_arr)
 
     return ga_population.best
+
+def evaluate(_stocks_list, _weights_arr):
+    assert isinstance(_stocks_list, list), "_stocks_list should be a list"
+    assert isinstance(_weights_arr, np.ndarray), "_weights_arr should be an array"
+
+    price_df = data.PRICE_TRUE[_stocks_list]
+    oct_ret = price_df.iloc[-1,:].div(price_df.iloc[0,:] , axis=0) -1
+    data.logger.info(str(oct_ret))
+    data.logger.info(str(np.dot(_weights_arr,oct_ret)))
+
+def decodeBest(_best):
+    gene = _best.gene
+    gene_arr = cutText(gene)
+    weight_arr = np.array([decodeGene(sub_gene) for sub_gene in gene_arr])
+    max_index_list = getMaxNIndex(weight_arr)
+    weight_arr = weight_arr[max_index_list]
+    weight_arr /= sum(weight_arr)
+    stock_arr = data.STOCK_ARR[max_index_list]
+    for i in range(len(stock_arr)):
+        data.logger.info(str((stock_arr[i],weight_arr[i])))
+    return stock_arr, weight_arr

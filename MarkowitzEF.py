@@ -46,7 +46,7 @@ def portSimulation(_ret_annual, _cov_matrix, _stock_amt = 10, _port_count = 5000
 def plotSharpe(_port_rets_arr, _port_vols_arr, _sharpe_ratio):
     plt.style.use('seaborn-dark')
     plt.figure(figsize=(9, 5))
-    plt.scatter(_port_vols_arr, _port_rets_arr, c=_sharpe_ratio,cmap='RdYlGn', edgecolors='black',marker='o')
+    plt.scatter(_port_vols_arr, _port_rets_arr, c=_sharpe_ratio,cmap='RdYlGn',marker='o')
     plt.grid(True)
     plt.xlabel('expected volatility')
     plt.ylabel('expected return')
@@ -79,3 +79,4 @@ def findBest(_ret_df, _stock_amt = 10, _port_count = 50000):
     opts = sco.minimize(min_func_sharpe, _stock_amt * [1. / _stock_amt,], method='SLSQP',  bounds=bnds, constraints=cons)
     print(opts['x'].round(3)) #得到各股票权重
     print(statistics(opts['x']).round(3)) #得到投资组合预期收益率、预期波动率以及夏普比率
+    return opts['x'].round(3)
