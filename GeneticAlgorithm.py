@@ -41,7 +41,7 @@ def calculatePE(_weight_arr):
     stock_list = list(stock_arr)
 
     # ret_df = data.RET_PREDICT[stock_list]
-    ret_df = data.RET_TRUE_SEP[stock_list]
+    ret_df = data.accurate_return[stock_list]
     annual_ret = ret_df.mean()*252
     cov_ret = ret_df.cov()*252
     returns = np.dot(_weight_arr, annual_ret)
@@ -72,15 +72,17 @@ def gaStockSelection(_cross_rate = params.cross_rate,
         ga_population.nextGeneration()
         count += 1
         stock_arr, weight_arr = decodeBest(ga_population.best)
-        evaluate(list(stock_arr),weight_arr)
+        evaluate(list(stock_arr),weight_arr,data.PRICE_PREDICT)
+        evaluate(list(stock_arr),weight_arr,data.PRICE_TRUE)
+
 
     return ga_population.best
 
-def evaluate(_stocks_list, _weights_arr):
+def evaluate(_stocks_list, _weights_arr,_df):
     assert isinstance(_stocks_list, list), "_stocks_list should be a list"
     assert isinstance(_weights_arr, np.ndarray), "_weights_arr should be an array"
 
-    price_df = data.PRICE_TRUE[_stocks_list]
+    price_df = _df[_stocks_list]
     oct_ret = price_df.iloc[-1,:].div(price_df.iloc[0,:] , axis=0) -1
     data.logger.info(str(oct_ret))
     data.logger.info(str(np.dot(_weights_arr,oct_ret)))

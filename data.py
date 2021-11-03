@@ -15,6 +15,8 @@ RET_TRUE_2021 = PRICE_TRUE_2021.pct_change().dropna()
 # POSI_STOCK_ARR = np.array(POSI_RET_PREDICT.columns)
 STOCK_ARR = np.array(PRICE_TRUE.columns)
 
+accurate_prediction = pd.read_csv('prediction.csv')
+accurate_return = accurate_prediction.pct_change().dropna()
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.DEBUG)
